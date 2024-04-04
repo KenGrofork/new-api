@@ -1,5 +1,5 @@
 name: Publish Docker image
-description: Push Docker image to Docker Hub
+
 
 on:
   release:
