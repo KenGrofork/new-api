@@ -32,19 +32,22 @@ jobs:
           # Set test_mode true to run tests instead of the true action!!
           test_mode: false
 
-      - name: Sync check
-        if: failure()
+      - name: Check for changes
+        id: git-diff
         run: |
-          echo "ERRO"
-          exit 1
+          changed_files=$(git diff-tree --no-commit-id --name-only -r HEAD)
+          if [[ -z "$changed_files" ]]; then
+            echo "::set-output name=changes::false"
+          else
+            echo "::set-output name=changes::true"
+          fi
 
-      - name: Trigger docker-image workflow
-        if: steps.sync.outputs.changes_detected == 'true'
-        run: |
-          curl -X POST \
-          -H "Authorization: token ${{ secrets.PERSONAL_ACCESS_TOKEN }}" \
-          -H "Accept: application/vnd.github.v3+json" \
-          https://api.github.com/repos/KenGrofork/new-api/dispatches \
-          -d '{"event_type": "trigger-docker-image"}'
 
+      - name: Run Docker workflow
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: docker-image.yml
+          push: false
+        if: steps.git-diff.outputs.changes == 'true'
 
