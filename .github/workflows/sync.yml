@@ -1,5 +1,4 @@
 name: Upstream Sync
-description: Sync latest commits from upstream repo
 permissions:
   contents: write
 
