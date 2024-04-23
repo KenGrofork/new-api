@@ -1,7 +1,11 @@
 name: Publish Docker image
 
-
 on:
+  pull_request_target:
+    types:
+      - opened
+      - synchronize
+      - reopened
   release:
     types: [published]
   repository_dispatch:
