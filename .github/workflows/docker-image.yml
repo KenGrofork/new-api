@@ -1,6 +1,8 @@
 name: Publish Docker image
 
 on:
+  push: # 当任何分支有新的提交时
+  pull_request: # 当有新的 pull request 时或已有的 pull request 发生变化时
   pull_request_target:
     types:
       - opened
@@ -24,14 +26,14 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      
+
       - name: Set timezone to Shanghai
         run: sudo ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo "Asia/Shanghai" | sudo tee /etc/timezone
       
       - name: Generate tag with Chinese date format
         id: date
         run: echo "::set-output name=date::$(date +'%y%m%d')"
-      
+
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@v4.0.0
