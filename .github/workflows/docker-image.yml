@@ -13,6 +13,7 @@ on:
   repository_dispatch:
     types: [trigger-docker-image]
     
+    
 jobs:
   push_to_registry:
     name: Push Docker image to Docker Hub
@@ -26,19 +27,19 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-
+      
       - name: Set timezone to Shanghai
         run: sudo ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo "Asia/Shanghai" | sudo tee /etc/timezone
       
       - name: Generate tag with Chinese date format
         id: date
         run: echo "::set-output name=date::$(date +'%y%m%d')"
-
+      
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@v4
         with:
-          image: buqian/new-api
+          images: buqian/new-api
           tags: |
             type=raw,value=latest
             type=raw,value=${{ steps.date.outputs.date }}
@@ -46,6 +47,7 @@ jobs:
       
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
       
