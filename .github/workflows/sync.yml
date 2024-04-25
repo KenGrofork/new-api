@@ -45,9 +45,10 @@ jobs:
           echo $(date) > .github/workflows/build.txt
           git config user.email "actions@github.com"
           git config user.name "GitHub Actions"
-          git add .github/workflows/build.txt
+          git add -f .github/workflows/build.txt
           git commit -m "Update build.txt with current time"
           git push
+
 
       - name: Trigger docker-image workflow
         if: steps.git-diff.outputs.changes == 'true'
