@@ -27,6 +27,9 @@ jobs:
           target_repo_token: ${{ secrets.GITHUB_TOKEN }}
           test_mode: false
 
+      - name: Reset .github/workflows folder
+        run: git checkout HEAD -- .github/workflows
+
       - name: Check for changes
         id: git-diff
         run: |
